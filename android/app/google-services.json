@@ -1,0 +1,30 @@
+{
+  "project_info": {
+    "project_number": "500112606361",
+    "firebase_url": "https://diurecycle-da558-default-rtdb.firebaseio.com",
+    "project_id": "diurecycle-da558",
+    "storage_bucket": "diurecycle-da558.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:500112606361:android:1059448f15837c82cbe408",
+        "android_client_info": {
+          "package_name": "com.example.diurecycle"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCThdZiU7XBSEpEBeBSgYviHdy1bBH9304"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
