@@ -24,13 +24,15 @@
 ---
 
 ## 📱 Screenshots
-![ss1](Sceenshoot/ss1.png)
-![ss2](Sceenshoot/ss2.png)
-![ss3](Sceenshoot/ss3.png)
-![ss4](Sceenshoot/ss4.png)
-![ss5](Sceenshoot/ss5.png)
-![ss6](Sceenshoot/ss6.png)
-![ss7](Sceenshoot/ss7.png)
-![ss8](Sceenshoot/ss8.png)
-![ss9](Sceenshoot/ss9.png)
-![ss10](Sceenshoot/ss10.png)
+## 📱 Screenshots
+
+<img src="Sceenshoot/ss1.png" alt="ss1" width="300" />
+<img src="Sceenshoot/ss2.png" alt="ss2" width="300" />
+<img src="Sceenshoot/ss3.png" alt="ss3" width="300" />
+<img src="Sceenshoot/ss4.png" alt="ss4" width="300" />
+<img src="Sceenshoot/ss5.png" alt="ss5" width="300" />
+<img src="Sceenshoot/ss6.png" alt="ss6" width="300" />
+<img src="Sceenshoot/ss7.png" alt="ss7" width="300" />
+<img src="Sceenshoot/ss8.png" alt="ss8" width="300" />
+<img src="Sceenshoot/ss9.png" alt="ss9" width="300" />
+<img src="Sceenshoot/ss10.png" alt="ss10" width="300" />
