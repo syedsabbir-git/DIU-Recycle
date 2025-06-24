@@ -15,7 +15,7 @@ DIU Recycle is a Flutter-based mobile application designed to facilitate buying 
 - Create, browse, and search listings of used products
 - Upload product images and details
 - Contact sellers directly
-- Notifications for new listings and updates
+- Notifications for new listings and meessages
 - Responsive Flutter UI for Android devices
 
 ---
@@ -25,7 +25,8 @@ DIU Recycle is a Flutter-based mobile application designed to facilitate buying 
 - Flutter & Dart
 - Firebase Authentication
 - Firebase Firestore (Cloud Database)
-- Firebase Storage (for images)
+- Cloudinary (for images)
+- OneSignal (Notification)
 
 ---
 
@@ -49,6 +50,8 @@ DIU Recycle is a Flutter-based mobile application designed to facilitate buying 
   <img src="Sceenshoot/ss11.png" alt="Screenshot 11" width="150" />
   <img src="Sceenshoot/ss12.png" alt="Screenshot 12" width="150" />
 </p>
+<img src="Sceenshoot/ss13.png" alt="Full width image 1" width="100%" />
+<img src="Sceenshoot/ss14.png" alt="Full width image 2" width="100%" />
 
 ---
 

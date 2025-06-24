@@ -1,6 +1,3 @@
-// lib/Screen/edit_product_page.dart
-// ignore_for_file: depend_on_referenced_packages, library_private_types_in_public_api
-
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:image_picker/image_picker.dart';

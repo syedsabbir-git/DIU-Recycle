@@ -17,7 +17,6 @@ class AddProductScreen extends StatefulWidget {
   const AddProductScreen({super.key});
 
   @override
-  // ignore: library_private_types_in_public_api
   _AddProductScreenState createState() => _AddProductScreenState();
 }
 
@@ -30,10 +29,9 @@ class _AddProductScreenState extends State<AddProductScreen> {
   LatLng? _selectedLocation;
   final TextEditingController _locationController = TextEditingController();
   final mapController = MapController();
-  // Cloudinary instance - replace with your cloud name and upload preset
   final cloudinary =
       CloudinaryPublic('dexm0l8os', 'DIURecycle', cache: false);
-  String _selectedHall = 'Other'; // Default value
+  String _selectedHall = 'Other'; 
   String _selectedCategory = '';
   String _selectedCondition = 'Good';
   DateTime _expiryDate = DateTime.now().add(Duration(days: 30));
@@ -45,7 +43,7 @@ class _AddProductScreenState extends State<AddProductScreen> {
   @override
   void initState() {
     super.initState();
-    // Pre-fill contact info if available from user profile
+  
     _loadUserProfile();
   }
 
@@ -70,7 +68,6 @@ class _AddProductScreenState extends State<AddProductScreen> {
     return await Geolocator.getCurrentPosition();
   }
 
-  // Add this method to show map selection dialog
 
   Future<void> _loadUserProfile() async {
     try {
@@ -166,7 +163,6 @@ class _AddProductScreenState extends State<AddProductScreen> {
 
         print('Compressed size: ${compressedFile.length} bytes');
 
-        // Create a temporary file from compressed bytes for uploading
         final tempFile = File('${imageFile.path}_compressed.jpg')
           ..writeAsBytesSync(compressedFile);
 
@@ -175,17 +171,14 @@ class _AddProductScreenState extends State<AddProductScreen> {
           CloudinaryFile.fromFile(
             tempFile.path,
             resourceType: CloudinaryResourceType.Image,
-            folder: 'product_images', // Organize images in folders
+            folder: 'product_images', 
           ),
         );
 
-        // Get the secure URL from the response
         final secureUrl = response.secureUrl;
         imageUrls.add(secureUrl);
-        // Clean up temporary file
         await tempFile.delete();
       } catch (e) {
-        // Continue with other images even if one fails
         continue;
       }
     }
@@ -242,12 +235,11 @@ class _AddProductScreenState extends State<AddProductScreen> {
 
         List<String> imageUrls = await _uploadImagesToCloudinary();
 
-        // Dismiss the uploading snackbar
         ScaffoldMessenger.of(context).hideCurrentSnackBar();
 
         // Create product with Cloudinary URLs
         final product = Product(
-          id: '', // Will be set by Firestore
+          id: '', 
           title: _titleController.text,
           description: _descriptionController.text,
           price: double.parse(_priceController.text),
@@ -255,8 +247,8 @@ class _AddProductScreenState extends State<AddProductScreen> {
           sellerId: user.uid,
           sellerName: sellerName,
           contactInfo: _contactInfoController.text,
-          imageUrls: imageUrls, // Store Cloudinary URLs
-          base64Images: [], // No need to store base64 images
+          imageUrls: imageUrls, 
+          base64Images: [], 
           createdAt: DateTime.now(),
           expiresAt: _expiryDate,
           hallDormitory: _selectedHall,

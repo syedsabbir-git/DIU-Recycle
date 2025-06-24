@@ -66,7 +66,7 @@ class AuthService {
       if (kDebugMode) {
         print('Create user error: $e');
       }
-      rethrow; // Rethrow to handle specific errors in UI
+      rethrow; 
     }
   }
 

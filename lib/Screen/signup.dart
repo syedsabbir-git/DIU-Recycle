@@ -1,5 +1,3 @@
-// ignore_for_file: unused_field, library_private_types_in_public_api, use_build_context_synchronously
-
 import 'package:diurecycle/Screen/home.dart';
 import 'package:diurecycle/services/auth_service.dart';
 import 'package:flutter/gestures.dart';

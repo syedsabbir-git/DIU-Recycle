@@ -1,4 +1,3 @@
-// lib/screens/profile_page.dart
 import 'package:diurecycle/Screen/add_product_page.dart';
 import 'package:diurecycle/Screen/edit_product_page.dart';
 import 'package:diurecycle/Screen/login.dart';

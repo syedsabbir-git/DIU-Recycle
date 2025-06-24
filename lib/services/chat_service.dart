@@ -13,18 +13,15 @@ import 'dart:convert';
 class ChatService {
   final FirebaseDatabase _database = FirebaseDatabase.instance;
   final AuthService _authService = AuthService();
-  // You should store these securely - consider using environment variables or a config file
   final String _oneSignalAppId = "8d3967fe-85a2-4355-81e9-1445123ff464";
   final String _oneSignalRestApiKey = "os_v2_app_ru4wp7ufujbvlapjcrcrep7umqmvaoke2ljuype3ojienhdyia4blzljlfbiyquljszsvpuxs4iycn45tagjz5bwxf6ovev3yhb6vbq";
 
-  // Get reference to chats node
   DatabaseReference get _chatsRef => _database.ref().child('chats');
 
-  // Get reference to messages node for a specific chat
   DatabaseReference _messagesRef(String chatId) =>
       _database.ref().child('messages').child(chatId);
 
-  // Create or get a chat between two users
+  // chat between two users
   Future<String> createOrGetChat({
     required String otherUserId,
     Product? product,
@@ -34,7 +31,7 @@ class ChatService {
       throw Exception('User not logged in');
     }
 
-    // Sort user IDs to ensure consistent chat ID regardless of who initiates
+    // Sort user ID
     final sortedUserIds = [currentUserId, otherUserId]..sort();
     final chatId = sortedUserIds.join('_');
 
@@ -101,29 +98,22 @@ class ChatService {
   // Send a message
   Future<void> sendMessage(String chatId, Message message) async {
     try {
-      // Get a reference to the messages node for this chat
       final messagesRef = _messagesRef(chatId);
 
-      // Push a new message (generates a unique ID)
       final newMessageRef = messagesRef.push();
       await newMessageRef.set(message.toMap());
-
-      // Determine the last message text for chat preview
-      // If there's an image but no text, show "📷 Image"
-      // If there's both text and image, use the text
-      // If there's only text, use the text
       final lastMessageText = message.content.isNotEmpty 
           ? message.content 
           : (message.imageUrl != null ? '📷 Image' : '');
 
-      // Update chat with last message info
+
       await _chatsRef.child(chatId).update({
         'lastMessage': lastMessageText,
         'lastMessageTime': message.timestamp.millisecondsSinceEpoch,
         'lastSenderId': message.senderId,
       });
 
-      // Increment unread count for the receiver
+
       await _chatsRef
           .child(chatId)
           .child('unreadCounts')
@@ -132,7 +122,6 @@ class ChatService {
         return rtdb.Transaction.success((currentValue as int? ?? 0) + 1);
       });
 
-      // Send push notification to receiver
       await _sendMessageNotification(message);
     } catch (e) {
       if (kDebugMode) {
@@ -146,29 +135,26 @@ class ChatService {
     print("Sending notification...................................................................................................");
 
     try {
-      // Get receiver's OneSignal Player ID from Firestore
+
       final docSnapshot = await FirebaseFirestore.instance
           .collection('users')
           .doc(message.receiverId)
           .get();
 
-      String? receiverPlayerId; // Declare nullable
+      String? receiverPlayerId; 
       if (docSnapshot.exists) {
         final data = docSnapshot.data();
         receiverPlayerId = data != null ? data['oneSignalPlayerId'] as String? : null;
         print('Receiver Player ID: $receiverPlayerId');
       }
 
-      // Get sender's name for the notification
       final senderName = message.senderName;
 
-      // Determine notification content based on message type
       final notificationContent = message.content.isNotEmpty 
           ? message.content 
           : (message.imageUrl != null ? '📷 Sent you an image' : '');
 
       if (receiverPlayerId != null && receiverPlayerId.isNotEmpty) {
-        // Send notification using OneSignal REST API
         final response = await http.post(
           Uri.parse('https://onesignal.com/api/v1/notifications'),
           headers: {
@@ -181,7 +167,7 @@ class ChatService {
             'headings': {'en': '$senderName sent you a message'},
             'contents': {'en': notificationContent},
             'data': {
-              'chatId': message.id.split('_')[0], // Extract the chat ID
+              'chatId': message.id.split('_')[0],
               'senderId': message.senderId,
               'type': 'chat_message',
             },
@@ -206,11 +192,9 @@ class ChatService {
       if (kDebugMode) {
         print('Error sending notification: $e');
       }
-      // No rethrow, because sending notification failure should not crash the app
     }
   }
 
-  // Stream of messages for a specific chat
   Stream<List<Message>> getMessages(String chatId) {
     return _messagesRef(chatId).orderByChild('timestamp').onValue.map((event) {
       final data = event.snapshot.value;
@@ -218,13 +202,11 @@ class ChatService {
         return [];
       }
       
-      // Fix: Cast data safely
       List<Message> messages = [];
       try {
         final messagesMap = data as Map<dynamic, dynamic>;
         messagesMap.forEach((key, value) {
           if (value is Map<dynamic, dynamic>) {
-            // Convert dynamic Map to properly typed Map<String, dynamic>
             final typedMap = _convertMap(value);
             messages.add(Message.fromMap(typedMap, key.toString()));
           }
@@ -235,13 +217,11 @@ class ChatService {
         }
       }
 
-      // Sort messages by timestamp
       messages.sort((a, b) => a.timestamp.compareTo(b.timestamp));
       return messages;
     });
   }
 
-  // Stream of all chats for current user
   Stream<List<Chat>> getUserChats() {
     final currentUserId = _authService.getCurrentUserId();
     if (currentUserId == null) {
@@ -259,7 +239,6 @@ class ChatService {
         final chatsMap = data as Map<dynamic, dynamic>;
         chatsMap.forEach((key, value) {
           if (value is Map<dynamic, dynamic>) {
-            // Convert dynamic Map to properly typed Map<String, dynamic>
             final typedMap = _convertMap(value);
             final chat = Chat.fromMap(typedMap, key.toString());
             
@@ -275,7 +254,7 @@ class ChatService {
         }
       }
 
-      // Sort chats by last message time (newest first)
+      // Sort chats (newest first)
       chats.sort((a, b) {
         if (a.lastMessageTime == null) return 1;
         if (b.lastMessageTime == null) return -1;
@@ -291,10 +270,10 @@ class ChatService {
     Map<String, dynamic> result = {};
     map.forEach((key, value) {
       if (value is Map<dynamic, dynamic>) {
-        // Recursively convert nested maps
+
         result[key.toString()] = _convertMap(value);
       } else if (value is List<dynamic>) {
-        // Convert lists
+
         result[key.toString()] = _convertList(value);
       } else {
         result[key.toString()] = value;
@@ -303,7 +282,6 @@ class ChatService {
     return result;
   }
 
-  // Helper method to convert List<dynamic> with potential nested maps
   List<dynamic> _convertList(List<dynamic> list) {
     List<dynamic> result = [];
     for (var item in list) {
@@ -318,7 +296,7 @@ class ChatService {
     return result;
   }
 
-  // Get total unread message count for current user
+  // Get total unread message count
   Stream<int> getTotalUnreadCount() {
     final currentUserId = _authService.getCurrentUserId();
     if (currentUserId == null) {
@@ -336,11 +314,10 @@ class ChatService {
         final chatsMap = data as Map<dynamic, dynamic>;
         chatsMap.forEach((key, value) {
           if (value is Map<dynamic, dynamic>) {
-            // Convert dynamic Map to properly typed Map<String, dynamic>
             final typedMap = _convertMap(value);
             final chat = Chat.fromMap(typedMap, key.toString());
             
-            // Only count unread messages in chats where current user is a participant
+
             if (chat.participants.contains(currentUserId)) {
               totalUnread += chat.getUnreadCountFor(currentUserId);
             }
@@ -364,13 +341,13 @@ class ChatService {
     }
 
     try {
-      // Get all messages in the chat
+
       final messagesSnapshot = await _messagesRef(chatId).get();
       if (messagesSnapshot.value == null) {
         return;
       }
       
-      // Fix: Cast data safely
+
       Map<String, dynamic> updates = {};
       try {
         final messagesMap = messagesSnapshot.value as Map<dynamic, dynamic>;
@@ -390,12 +367,12 @@ class ChatService {
         }
       }
 
-      // If there are messages to update
+
       if (updates.isNotEmpty) {
-        // Update all messages with one operation
+
         await _messagesRef(chatId).update(updates);
 
-        // Reset unread count for current user
+
         await _chatsRef
             .child(chatId)
             .child('unreadCounts')

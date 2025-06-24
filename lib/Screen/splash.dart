@@ -23,7 +23,6 @@ class _SplashScreenState extends State<SplashScreen>
   void initState() {
     super.initState();
     _checkVersionAndLogin();
-    // Initialize animations
     _animationController = AnimationController(
       duration: Duration(milliseconds: 2000),
       vsync: this,
@@ -45,31 +44,29 @@ class _SplashScreenState extends State<SplashScreen>
       curve: Interval(0.0, 0.5, curve: Curves.easeOutBack),
     ));
 
-    // Start animation and check auth status
+    // Start animation
     _animationController.forward();
     _checkAuthStatus();
   }
 
   Future<void> _checkAuthStatus() async {
-    // Add a minimum delay to show splash screen
+ 
     await Future.delayed(Duration(seconds: 3));
 
     if (!mounted) return;
 
-    // Check if this is the first launch
+
     SharedPreferences prefs = await SharedPreferences.getInstance();
     bool isFirstLaunch = prefs.getBool('isFirstLaunch') ?? true;
 
-    // If first launch, show onboarding screen
+
     if (isFirstLaunch) {
-      // Set isFirstLaunch to false for future app launches
       await prefs.setBool('isFirstLaunch', false);
       
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(builder: (context) => OnboardingScreen(
           onComplete: () {
-            // Navigate to login page after onboarding
             Navigator.pushReplacement(
               context,
               MaterialPageRoute(builder: (context) => LoginPage()),
@@ -80,7 +77,6 @@ class _SplashScreenState extends State<SplashScreen>
       return;
     }
 
-    // Regular flow for returning users
     User? currentUser = FirebaseAuth.instance.currentUser;
     bool isLoggedIn = prefs.getBool('isLoggedIn') ?? false;
 
@@ -147,7 +143,7 @@ class _SplashScreenState extends State<SplashScreen>
                         child: Center(
                           child: Image.asset(
                             'lib/assets/logo.png',
-                            height: 100, // Adjust size as needed
+                            height: 100, 
                             width: 100,
                             fit: BoxFit.contain,
                           ),

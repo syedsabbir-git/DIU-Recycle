@@ -1,5 +1,3 @@
-// ignore_for_file: use_super_parameters
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:diurecycle/Screen/chat_screen.dart';
 import 'package:diurecycle/services/chat_service.dart';

@@ -1,4 +1,3 @@
-// lib/models/chat.dart
 class Chat {
   final String id;
   final List<String> participants;
@@ -7,7 +6,7 @@ class Chat {
   final String? productId;
   final String? productTitle;
   final String? productImageUrl;
-  final Map<String, int>? unreadCounts; // Map of userId -> unread count
+  final Map<String, int>? unreadCounts; 
 
   Chat({
     required this.id,
