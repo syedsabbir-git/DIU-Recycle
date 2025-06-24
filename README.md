@@ -1,38 +1,62 @@
 # ♻️ DIU Recycle
 
-**DIU Recycle** is a Flutter-based marketplace app for the students of **Daffodil International University (DIU)** to buy and sell used products directly to one another. It's a student-to-student platform that promotes sustainability and affordability on campus.
+![Flutter](https://img.shields.io/badge/Flutter-3.7-blue?logo=flutter&logoColor=white)
+![Dart](https://img.shields.io/badge/Dart-3.0-blue?logo=dart&logoColor=white)
+![License](https://img.shields.io/github/license/syedsabbir-git/DIU-Recycle)
+![GitHub issues](https://img.shields.io/github/issues/syedsabbir-git/DIU-Recycle)
+
+DIU Recycle is a Flutter-based mobile application designed to facilitate buying and selling used products among students of Daffodil International University (DIU). The platform promotes sustainability and convenience by connecting buyers and sellers within the university community.
 
 ---
 
 ## 🚀 Features
 
-- 🛍️ Buy & sell second-hand items (books, electronics, accessories, etc.)
-- 🔍 Search and browse listings by category
-- 🧾 Product details and seller contact
-- 📸 Upload photos when listing products
-- 📲 Firebase integration for authentication and data
-- 🌐 Smooth, modern Flutter UI for Android
+- User authentication with university email (Firebase)
+- Create, browse, and search listings of used products
+- Upload product images and details
+- Contact sellers directly
+- Notifications for new listings and updates
+- Responsive Flutter UI for Android devices
 
 ---
 
-## 🔧 Tech Stack
+## 🛠️ Tech Stack
 
-- **Flutter** – Frontend & UI
-- **Firebase** – Backend (Auth, Firestore, Storage)
-- **Dart** – Programming language
+- Flutter & Dart
+- Firebase Authentication
+- Firebase Firestore (Cloud Database)
+- Firebase Storage (for images)
 
 ---
 
 ## 📱 Screenshots
-## 📱 Screenshots
-<img src="Sceenshoot/ss9.png" alt="ss9" width="300" />
-<img src="Sceenshoot/ss10.png" alt="ss10" width="300" />
-<img src="Sceenshoot/ss1.png" alt="ss1" width="300" />
-<img src="Sceenshoot/ss2.png" alt="ss2" width="300" />
-<img src="Sceenshoot/ss3.png" alt="ss3" width="300" />
-<img src="Sceenshoot/ss4.png" alt="ss4" width="300" />
-<img src="Sceenshoot/ss5.png" alt="ss5" width="300" />
-<img src="Sceenshoot/ss6.png" alt="ss6" width="300" />
-<img src="Sceenshoot/ss7.png" alt="ss7" width="300" />
-<img src="Sceenshoot/ss8.png" alt="ss8" width="300" />
+
+<p float="left">
+  <img src="Sceenshoot/ss1.png" alt="Screenshot 1" width="150" />
+  <img src="Sceenshoot/ss2.png" alt="Screenshot 2" width="150" />
+  <img src="Sceenshoot/ss3.png" alt="Screenshot 3" width="150" />
+  <img src="Sceenshoot/ss4.png" alt="Screenshot 4" width="150" />
+</p>
+<p float="left">
+  <img src="Sceenshoot/ss5.png" alt="Screenshot 5" width="150" />
+  <img src="Sceenshoot/ss6.png" alt="Screenshot 6" width="150" />
+  <img src="Sceenshoot/ss7.png" alt="Screenshot 7" width="150" />
+  <img src="Sceenshoot/ss8.png" alt="Screenshot 8" width="150" />
+</p>
+<p float="left">
+  <img src="Sceenshoot/ss9.png" alt="Screenshot 9" width="150" />
+  <img src="Sceenshoot/ss10.png" alt="Screenshot 10" width="150" />
+</p>
+
+---
+
+## 📞 Contact
+
+If you have any questions, feedback, or want to collaborate, feel free to reach out!
+
+- **Name:** Syed Sabbir Ahmed  
+- **Email:** [syedsabbirahmed.contact@gmail.com](mailto:syedsabbirahmed.contact@gmail.com)  
+- **GitHub:** [github.com/syedsabbir-git](https://github.com/syedsabbir-git)  
+- **LinkedIn:** [linkedin.com/in/syed-sabbir-ahmed](https://www.linkedin.com/in/syed-sabbir-ahmed/) 
+
 
