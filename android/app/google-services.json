@@ -8,6 +8,25 @@
   "client": [
     {
       "client_info": {
+        "mobilesdk_app_id": "1:500112606361:android:ef0982b99483a0fdcbe408",
+        "android_client_info": {
+          "package_name": "com.diurecycle.app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCThdZiU7XBSEpEBeBSgYviHdy1bBH9304"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
         "mobilesdk_app_id": "1:500112606361:android:1059448f15837c82cbe408",
         "android_client_info": {
           "package_name": "com.example.diurecycle"

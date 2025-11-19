@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart' show kDebugMode;
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:image_picker/image_picker.dart';
@@ -545,7 +546,9 @@ class _EditProductScreenState extends State<EditProductScreen> {
           final ref = FirebaseStorage.instance.refFromURL(imageUrl);
           await ref.delete();
         } catch (e) {
-          print('Error deleting image: $e');
+          if (kDebugMode) {
+            print('Error deleting image: $e');
+          }
           // Continue even if deletion fails
         }
       }

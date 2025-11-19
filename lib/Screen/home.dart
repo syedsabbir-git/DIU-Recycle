@@ -2,8 +2,10 @@ import 'package:diurecycle/Screen/add_product_page.dart';
 import 'package:diurecycle/Screen/chats_list_screen.dart';
 import 'package:diurecycle/Screen/product_details_screen.dart';
 import 'package:diurecycle/Screen/profile_page.dart';
+import 'package:diurecycle/Screen/settings_screen.dart';
 import 'package:diurecycle/services/auth_service.dart';
 import 'package:diurecycle/services/chat_service.dart';
+import 'package:flutter/foundation.dart' show kDebugMode;
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import '../models/product.dart';
@@ -18,6 +20,7 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
   late AnimationController _animationController;
   String _selectedCategory = 'all'; // Default to 'all' category
   String _searchQuery = '';
+  int _selectedBottomNavIndex = 0;
 
   @override
   void initState() {
@@ -48,21 +51,11 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
           ),
         ],
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(builder: (context) => AddProductScreen()),
-          );
-        },
-        backgroundColor: Colors.green.shade600,
-        child: Icon(Icons.add, color: Colors.white),
-      ),
+      bottomNavigationBar: _buildBottomNavigationBar(),
     );
   }
 
  _buildAppBar() {
-  final ChatService chatService = ChatService();
   
   return AppBar(
     title: Text(
@@ -75,65 +68,170 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
     ),
     backgroundColor: Colors.white,
     elevation: 0,
-    actions: [
-      // Message icon with unread count badge
-      StreamBuilder<int>(
-        stream: _getTotalUnreadMessagesCount(),  // Using the original method name
-        builder: (context, snapshot) {
-          final unreadCount = snapshot.data ?? 0;
-          
-          return Stack(
-            children: [
-              IconButton(
-                icon: Icon(Icons.message, color: Colors.green.shade800),
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => const ChatsListScreen()),
-                  );
-                },
-              ),
-              if (unreadCount > 0)
-                Positioned(
-                  right: 5,
-                  top: 5,
-                  child: Container(
-                    padding: const EdgeInsets.all(2),
-                    decoration: BoxDecoration(
-                      color: Colors.red,
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                    constraints: const BoxConstraints(
-                      minWidth: 16,
-                      minHeight: 16,
-                    ),
-                    child: Text(
-                      unreadCount > 99 ? '99+' : unreadCount.toString(),
-                      style: const TextStyle(
-                        color: Colors.white,
-                        fontSize: 10,
-                        fontWeight: FontWeight.bold,
-                      ),
-                      textAlign: TextAlign.center,
-                    ),
-                  ),
-                ),
-            ],
-          );
-        },
-      ),
-      IconButton(
-        icon: Icon(Icons.person, color: Colors.green.shade800),
-        onPressed: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(builder: (context) => ProfilePage()),
-          );
-        },
-      ),
-    ],
   );
 }
+
+  Widget _buildBottomNavigationBar() {
+    return StreamBuilder<int>(
+      stream: _getTotalUnreadMessagesCount(),
+      builder: (context, snapshot) {
+        final unreadCount = snapshot.data ?? 0;
+
+        return BottomNavigationBar(
+          currentIndex: _selectedBottomNavIndex,
+          onTap: _onNavItemTapped,
+          type: BottomNavigationBarType.fixed,
+          selectedItemColor: Colors.green.shade700,
+          unselectedItemColor: Colors.grey.shade600,
+          items: [
+            const BottomNavigationBarItem(
+              icon: Icon(Icons.home_outlined),
+              activeIcon: Icon(Icons.home),
+              label: 'Home',
+            ),
+            BottomNavigationBarItem(
+              icon: Stack(
+                clipBehavior: Clip.none,
+                children: [
+                  const Icon(Icons.message_outlined),
+                  if (unreadCount > 0)
+                    Positioned(
+                      right: -6,
+                      top: -6,
+                      child: Container(
+                        padding: const EdgeInsets.all(2),
+                        decoration: BoxDecoration(
+                          color: Colors.red,
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        constraints: const BoxConstraints(
+                          minWidth: 16,
+                          minHeight: 16,
+                        ),
+                        child: Text(
+                          unreadCount > 99 ? '99+' : unreadCount.toString(),
+                          style: const TextStyle(
+                            color: Colors.white,
+                            fontSize: 10,
+                            fontWeight: FontWeight.bold,
+                          ),
+                          textAlign: TextAlign.center,
+                        ),
+                      ),
+                    ),
+                ],
+              ),
+              activeIcon: Stack(
+                clipBehavior: Clip.none,
+                children: [
+                  const Icon(Icons.message),
+                  if (unreadCount > 0)
+                    Positioned(
+                      right: -6,
+                      top: -6,
+                      child: Container(
+                        padding: const EdgeInsets.all(2),
+                        decoration: BoxDecoration(
+                          color: Colors.red,
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        constraints: const BoxConstraints(
+                          minWidth: 16,
+                          minHeight: 16,
+                        ),
+                        child: Text(
+                          unreadCount > 99 ? '99+' : unreadCount.toString(),
+                          style: const TextStyle(
+                            color: Colors.white,
+                            fontSize: 10,
+                            fontWeight: FontWeight.bold,
+                          ),
+                          textAlign: TextAlign.center,
+                        ),
+                      ),
+                    ),
+                ],
+              ),
+              label: 'Chats',
+            ),
+            const BottomNavigationBarItem(
+              icon: Icon(Icons.add_circle_outline),
+              activeIcon: Icon(Icons.add_circle),
+              label: 'Add',
+            ),
+            const BottomNavigationBarItem(
+              icon: Icon(Icons.person_outline),
+              activeIcon: Icon(Icons.person),
+              label: 'Profile',
+            ),
+            const BottomNavigationBarItem(
+              icon: Icon(Icons.settings_outlined),
+              activeIcon: Icon(Icons.settings),
+              label: 'Settings',
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  void _onNavItemTapped(int index) {
+    if (index == 0) {
+      setState(() {
+        _selectedBottomNavIndex = 0;
+      });
+      return;
+    }
+
+    if (index == 2) {
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => AddProductScreen()),
+      ).then((_) {
+        if (!mounted) return;
+        setState(() {
+          _selectedBottomNavIndex = 0;
+        });
+      });
+      return;
+    }
+
+    setState(() {
+      _selectedBottomNavIndex = index;
+    });
+
+    if (index == 1) {
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => const ChatsListScreen()),
+      ).then((_) {
+        if (!mounted) return;
+        setState(() {
+          _selectedBottomNavIndex = 0;
+        });
+      });
+    } else if (index == 3) {
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => ProfilePage()),
+      ).then((_) {
+        if (!mounted) return;
+        setState(() {
+          _selectedBottomNavIndex = 0;
+        });
+      });
+    } else if (index == 4) {
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => const SettingsScreen()),
+      ).then((_) {
+        if (!mounted) return;
+        setState(() {
+          _selectedBottomNavIndex = 0;
+        });
+      });
+    }
+  }
 
   Widget _buildSearchBar() {
     return Padding(
@@ -525,7 +623,9 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
                           );
                         },
                         errorBuilder: (context, error, stackTrace) {
-                          print('Error loading image: $error');
+                          if (kDebugMode) {
+                            print('Error loading image: $error');
+                          }
                           return Container(
                             color: Colors.grey.shade200,
                             child: Center(

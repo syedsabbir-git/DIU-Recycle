@@ -3,6 +3,7 @@ import 'package:firebase_database/firebase_database.dart' as rtdb;
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/foundation.dart';
+import '../config/env.dart';
 import '../models/message.dart';
 import '../models/chat.dart';
 import '../models/product.dart';
@@ -13,8 +14,8 @@ import 'dart:convert';
 class ChatService {
   final FirebaseDatabase _database = FirebaseDatabase.instance;
   final AuthService _authService = AuthService();
-  final String _oneSignalAppId = "8d3967fe-85a2-4355-81e9-1445123ff464";
-  final String _oneSignalRestApiKey = "os_v2_app_ru4wp7ufujbvlapjcrcrep7umqmvaoke2ljuype3ojienhdyia4blzljlfbiyquljszsvpuxs4iycn45tagjz5bwxf6ovev3yhb6vbq";
+  final String _oneSignalAppId = Env.oneSignalAppId;
+  final String _oneSignalRestApiKey = Env.oneSignalRestApiKey;
 
   DatabaseReference get _chatsRef => _database.ref().child('chats');
 
@@ -132,20 +133,39 @@ class ChatService {
   }
 
   Future<void> _sendMessageNotification(Message message) async {
-    print("Sending notification...................................................................................................");
+    if (kDebugMode) {
+      print("Sending notification...................................................................................................");
+    }
 
     try {
-
-      final docSnapshot = await FirebaseFirestore.instance
+      // Get receiver's OneSignal Player ID
+      final receiverDocSnapshot = await FirebaseFirestore.instance
           .collection('users')
           .doc(message.receiverId)
           .get();
 
       String? receiverPlayerId; 
-      if (docSnapshot.exists) {
-        final data = docSnapshot.data();
+      if (receiverDocSnapshot.exists) {
+        final data = receiverDocSnapshot.data();
         receiverPlayerId = data != null ? data['oneSignalPlayerId'] as String? : null;
-        print('Receiver Player ID: $receiverPlayerId');
+        if (kDebugMode) {
+          print('Receiver Player ID: $receiverPlayerId');
+        }
+      }
+
+      // Get sender's OneSignal Player ID to exclude from notifications
+      final senderDocSnapshot = await FirebaseFirestore.instance
+          .collection('users')
+          .doc(message.senderId)
+          .get();
+
+      String? senderPlayerId; 
+      if (senderDocSnapshot.exists) {
+        final data = senderDocSnapshot.data();
+        senderPlayerId = data != null ? data['oneSignalPlayerId'] as String? : null;
+        if (kDebugMode) {
+          print('Sender Player ID (to exclude): $senderPlayerId');
+        }
       }
 
       final senderName = message.senderName;
@@ -154,7 +174,11 @@ class ChatService {
           ? message.content 
           : (message.imageUrl != null ? '📷 Sent you an image' : '');
 
-      if (receiverPlayerId != null && receiverPlayerId.isNotEmpty) {
+      // Only send notification if receiver has a valid Player ID
+      // and it's different from sender's Player ID
+      if (receiverPlayerId != null && 
+          receiverPlayerId.isNotEmpty && 
+          receiverPlayerId != senderPlayerId) {
         final response = await http.post(
           Uri.parse('https://onesignal.com/api/v1/notifications'),
           headers: {
@@ -185,7 +209,11 @@ class ChatService {
         }
       } else {
         if (kDebugMode) {
-          print('Receiver OneSignal ID not found, notification not sent.');
+          if (receiverPlayerId == null || receiverPlayerId.isEmpty) {
+            print('Receiver OneSignal ID not found, notification not sent.');
+          } else if (receiverPlayerId == senderPlayerId) {
+            print('Sender and receiver are the same device, notification not sent to avoid duplicate.');
+          }
         }
       }
     } catch (e) {

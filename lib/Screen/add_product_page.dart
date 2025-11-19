@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:flutter/foundation.dart' show kDebugMode;
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -7,6 +8,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:cloudinary_public/cloudinary_public.dart';
 import 'package:flutter_image_compress/flutter_image_compress.dart';
+import '../config/env.dart';
 import '../models/product.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong2/latlong.dart';
@@ -29,8 +31,11 @@ class _AddProductScreenState extends State<AddProductScreen> {
   LatLng? _selectedLocation;
   final TextEditingController _locationController = TextEditingController();
   final mapController = MapController();
-  final cloudinary =
-      CloudinaryPublic('dexm0l8os', 'DIURecycle', cache: false);
+  final cloudinary = CloudinaryPublic(
+    Env.cloudinaryCloudName,
+    Env.cloudinaryUploadPreset,
+    cache: false,
+  );
   String _selectedHall = 'Other'; 
   String _selectedCategory = '';
   String _selectedCondition = 'Good';
@@ -146,8 +151,10 @@ class _AddProductScreenState extends State<AddProductScreen> {
         File imageFile = _selectedImages[i];
 
         // Debug log file size
-        print('Processing image ${i + 1}/${_selectedImages.length}');
-        print('Original file size: ${await imageFile.length()} bytes');
+        if (kDebugMode) {
+          print('Processing image ${i + 1}/${_selectedImages.length}');
+          print('Original file size: ${await imageFile.length()} bytes');
+        }
 
         // Compress the image before uploading to save bandwidth
         final compressedFile = await FlutterImageCompress.compressWithFile(
@@ -161,7 +168,9 @@ class _AddProductScreenState extends State<AddProductScreen> {
           throw Exception('Failed to compress image');
         }
 
-        print('Compressed size: ${compressedFile.length} bytes');
+        if (kDebugMode) {
+          print('Compressed size: ${compressedFile.length} bytes');
+        }
 
         final tempFile = File('${imageFile.path}_compressed.jpg')
           ..writeAsBytesSync(compressedFile);
@@ -902,7 +911,9 @@ class _AddProductScreenState extends State<AddProductScreen> {
             });
           }
         } catch (e) {
-          print('Error getting address: $e');
+          if (kDebugMode) {
+            print('Error getting address: $e');
+          }
           setState(() {
             _selectedLocation = result;
             _locationController.text =

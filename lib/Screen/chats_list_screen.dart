@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import '../models/chat.dart';
@@ -47,7 +48,9 @@ class _ChatsListScreenState extends State<ChatsListScreen> {
 
     return 'User';
   } catch (e) {
-    print('Error getting user name: $e');
+    if (kDebugMode) {
+      print('Error getting user name: $e');
+    }
     return 'User';
   }
 }

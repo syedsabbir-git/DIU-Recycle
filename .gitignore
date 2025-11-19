@@ -43,3 +43,38 @@ app.*.symbols
 
 # Obfuscation related
 app.*.map.json
+
+# Environment variables
+.env
+.env.local
+.env.*.local
+
+# Signing files - DO NOT COMMIT
+*.jks
+*.keystore
+android/key.properties
+keystore_base64.txt
+
+# Generated files
+*.g.dart
+*.freezed.dart
+
+# Documentation files (local reference only)
+PLAY_STORE_READINESS_ASSESSMENT.md
+PLAY_CONSOLE_ANSWERS.md
+PRIVACY_POLICY_TEMPLATE.md
+QUICK_START_PUBLISHING.md
+PUBLISHING_CHECKLIST.md
+PLAYSTORE_PUBLISHING_GUIDE.md
+REPORT_FEATURE_GUIDE.md
+ENV_SETUP.md
+ENV_SETUP_SUMMARY.md
+FUTURE_ADS_SETUP.md
+NEXT_STEPS.md
+ONESIGNAL_PACKAGE_NAME_UPDATE.md
+UPDATE_PACKAGE_NAME_GUIDE.md
+QUICK_ADS_GUIDE.md
+README_ENV.md
+PLAYSTORE_ASSETS_GUIDE.md
+playstore_assets/
+setup_github_actions.ps1

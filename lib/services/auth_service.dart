@@ -20,10 +20,14 @@ class AuthService {
       // Access the user's OneSignal ID directly from the User object
       final playerId = OneSignal.User.pushSubscription.id;
 
-      print('OneSignal Player ID: $playerId');
+      if (kDebugMode) {
+        print('OneSignal Player ID: $playerId');
+      }
       return playerId;
     } catch (e) {
-      print('Error getting OneSignal Player ID: $e');
+      if (kDebugMode) {
+        print('Error getting OneSignal Player ID: $e');
+      }
       return null;
     }
   }

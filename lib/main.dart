@@ -1,5 +1,7 @@
 import 'package:diurecycle/Screen/splash.dart';
+import 'package:diurecycle/config/env.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:onesignal_flutter/onesignal_flutter.dart';
 
@@ -15,17 +17,26 @@ void main() async {
 
 //OneSignal
 Future<void> initializeOneSignal() async {
-  OneSignal.Debug.setLogLevel(OSLogLevel.verbose);
+  // Only enable verbose logging in debug mode
+  if (kDebugMode) {
+    OneSignal.Debug.setLogLevel(OSLogLevel.verbose);
+  } else {
+    OneSignal.Debug.setLogLevel(OSLogLevel.none);
+  }
   
-  OneSignal.initialize("8d3967fe-85a2-4355-81e9-1445123ff464");
+  OneSignal.initialize(Env.oneSignalAppId);
 
   OneSignal.Notifications.requestPermission(true);
   OneSignal.Notifications.addClickListener((event) {
-    print('Notification clicked: ${event.notification.additionalData}');
+    if (kDebugMode) {
+      print('Notification clicked: ${event.notification.additionalData}');
+    }
   });
   
   OneSignal.Notifications.addForegroundWillDisplayListener((event) {
-    print('Notification received in foreground');
+    if (kDebugMode) {
+      print('Notification received in foreground');
+    }
   });
 }
 
