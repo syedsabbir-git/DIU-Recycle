@@ -41,6 +41,32 @@ jobs:
       - name: Install dependencies
         run: flutter pub get
       
+      - name: Create env.g.dart
+        env:
+          ONESIGNAL_APP_ID: ${{ secrets.ONESIGNAL_APP_ID }}
+          ONESIGNAL_REST_API_KEY: ${{ secrets.ONESIGNAL_REST_API_KEY }}
+          CLOUDINARY_CLOUD_NAME: ${{ secrets.CLOUDINARY_CLOUD_NAME }}
+          CLOUDINARY_UPLOAD_PRESET: ${{ secrets.CLOUDINARY_UPLOAD_PRESET }}
+        run: |
+          cat > lib/config/env.g.dart << 'EOF'
+          // GENERATED CODE - DO NOT MODIFY BY HAND
+
+          part of 'env.dart';
+
+          // **************************************************************************
+          // EnviedGenerator
+          // **************************************************************************
+
+          // coverage:ignore-file
+          // ignore_for_file: type=lint
+          final class _Env {
+            static const String oneSignalAppId = '${{ secrets.ONESIGNAL_APP_ID }}';
+            static const String oneSignalRestApiKey = '${{ secrets.ONESIGNAL_REST_API_KEY }}';
+            static const String cloudinaryCloudName = '${{ secrets.CLOUDINARY_CLOUD_NAME }}';
+            static const String cloudinaryUploadPreset = '${{ secrets.CLOUDINARY_UPLOAD_PRESET }}';
+          }
+          EOF
+      
       - name: Decode keystore
         env:
           KEYSTORE_BASE64: ${{ secrets.KEYSTORE_BASE64 }}
